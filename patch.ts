@@ -60,6 +60,11 @@ function _remove(object: any, key: string): void {
 >     that member's value is replaced.
 */
 export function add(object: any, operation: AddOperation): MissingError | null {
+  if (operation.path.includes('__proto__') ||
+      operation.path.includes('prototype') ||
+      operation.path.includes('constructor')){
+    return null
+  }
   const endpoint = Pointer.fromJSON(operation.path).evaluate(object)
   // it's not exactly a "MissingError" in the same way that `remove` is -- more like a MissingParent, or something
   if (endpoint.parent === undefined) {
